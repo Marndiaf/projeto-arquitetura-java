@@ -1,37 +1,59 @@
 package br.edu.infnet.mariana.domain;
 
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
 public class Cargo {
-    private int id;
-    private String nome;
-    private String nivel;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    public Cargo(int id, String nome, String nivel) {
-        this.id = id;
-        this.nome = nome;
-        this.nivel = nivel;
-    }
+	@Column(nullable = false, length = 100)
+	private String nome;
 
-    public int getId() {
-        return id;
-    }
+	@Column(nullable = false, length = 50)
+	private String nivel;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@OneToMany(mappedBy = "cargo")
+	private List<Funcionario> funcionarios;
 
-    public String getNome() {
-        return nome;
-    }
+	public Cargo(int id, String nome, String nivel) {
+		this.id = id;
+		this.nome = nome;
+		this.nivel = nivel;
+	}
+	
+	public Cargo() {
+		
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	@Override
+	public String toString() {
+		return "Cargo: " + " | Id: " + id + " | Nome: '" + nome + " | Nível: " + nivel;
+	}
 
-    public String getNivel() {
-        return nivel;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setNivel(String nivel) {
-        this.nivel = nivel;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
 }

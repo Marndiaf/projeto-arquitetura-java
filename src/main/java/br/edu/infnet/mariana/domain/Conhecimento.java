@@ -1,37 +1,70 @@
 package br.edu.infnet.mariana.domain;
 
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
 public class Conhecimento {
-    private int id;
-    private String nome;
-    private Trilha trilha;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    public Conhecimento(int id, String nome, Trilha trilha) {
-        this.id = id;
-        this.nome = nome;
-        this.trilha = trilha;
-    }
+	@Column(nullable = false, length = 100)
+	private String nome;
 
-    public int getId() {
-        return id;
-    }
+	@Column(nullable = false)
+	private int nivel;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "trilha_id")
+	private Trilha trilha;
 
-    public String getNome() {
-        return nome;
-    }
+	@OneToMany(mappedBy = "conhecimento")
+	private List<Avaliacao> avaliacoes;
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public Conhecimento(int id, String nome, Trilha trilha) {
+		this.id = id;
+		this.nome = nome;
+		this.trilha = trilha;
+	}
+	
+	public Conhecimento() {
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "Conhecimento: " + " | Id: " + id + " | Nome: '" + nome + " | Nível: " + nivel + " | Trilha Id: " + trilha;
+	}
+	public int getId() {
+		return id;
+	}
 
-    public Trilha getTrilha() {
-        return trilha;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setTrilha(Trilha trilha) {
-        this.trilha = trilha;
-    }
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	public int getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(int nivel) {
+		this.nivel = nivel;
+	}
+
+	public Trilha getTrilha() {
+		return trilha;
+	}
+
+	public void setTrilha(Trilha trilha) {
+		this.trilha = trilha;
+	}
 }

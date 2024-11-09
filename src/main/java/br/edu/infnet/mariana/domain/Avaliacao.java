@@ -1,57 +1,76 @@
 package br.edu.infnet.mariana.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Avaliacao {
-    private int id;
-    private Pessoa pessoa;
-    private Conhecimento conhecimento;
-    private String tipo;
-    private float nota;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    public Avaliacao(int id, Pessoa pessoa, Conhecimento conhecimento, String tipo, float nota) {
-        this.id = id;
-        this.pessoa = pessoa;
-        this.conhecimento = conhecimento;
-        this.tipo = tipo;
-        this.nota = nota;
-    }
+	@ManyToOne
+	@JoinColumn(name = "funcionario_id")
+	private Funcionario funcionario;
 
-    public int getId() {
-        return id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "conhecimento_id")
+	private Conhecimento conhecimento;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@Column(nullable = false, length = 50)
+	private String tipo; 
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
+	@Column(nullable = false)
+	private float nota;
 
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
+	public Avaliacao(int id, Funcionario funcionario, Conhecimento conhecimento, String tipo, float nota) {
+		this.id = id;
+		this.funcionario = funcionario;
+		this.conhecimento = conhecimento;
+		this.tipo = tipo;
+		this.nota = nota;
+	}
+	
+	public Avaliacao() {
+		
+	}
 
-    public Conhecimento getConhecimento() {
-        return conhecimento;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setConhecimento(Conhecimento conhecimento) {
-        this.conhecimento = conhecimento;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getTipo() {
-        return tipo;
-    }
+	public Funcionario gatFuncionario() {
+		return funcionario;
+	}
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
+	}
 
-    public float getNota() {
-        return nota;
-    }
+	public Conhecimento getConhecimento() {
+		return conhecimento;
+	}
 
-    public void setNota(float nota) {
-        this.nota = nota;
-    }
+	public void setConhecimento(Conhecimento conhecimento) {
+		this.conhecimento = conhecimento;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public float getNota() {
+		return nota;
+	}
+
+	public void setNota(float nota) {
+		this.nota = nota;
+	}
 }

@@ -23,30 +23,115 @@ public class MarianaApplication implements CommandLineRunner {
 
         while (true) {
             System.out.println("Escolha uma opção:");
-            System.out.println("1. Cadastrar Pessoa");
-            System.out.println("2. Cadastrar Cargo");
-            System.out.println("3. Cadastrar Trilha");
-            System.out.println("4. Sair");
+            System.out.println("--------------------------");
+            System.out.println("1. Cadastrar Funcionário");
+            System.out.println("2. Editar Funcionário");
+            System.out.println("3. Exibir Funcionários");
+            System.out.println("4. Excluir Funcionário");
+            System.out.println("--------------------------");
+            System.out.println("5. Cadastrar Gestor");
+            System.out.println("6. Editar Gestor");
+            System.out.println("7. Exibir Gestores");
+            System.out.println("8. Excluir Gestor");
+            System.out.println("--------------------------");
+            System.out.println("9. Cadastrar Cargo");
+            System.out.println("10. Editar Cargo");
+            System.out.println("11. Exibir Cargos");
+            System.out.println("12. Excluir Cargo");
+            System.out.println("--------------------------");
+            System.out.println("13. Cadastrar Trilha");
+            System.out.println("14. Editar Trilha");
+            System.out.println("15. Exibir Trilhas");
+            System.out.println("16. Excluir Trilha");
+            System.out.println("--------------------------");
+            System.out.println("17. Cadastrar Conhecimento");
+            System.out.println("18. Editar Conhecimento");
+            System.out.println("19. Exibir Conhecimentos");
+            System.out.println("20. Excluir Conhecimento");
+            System.out.println("--------------------------");
+            System.out.println("21. Enviar Avaliação");
+            System.out.println("--------------------------");
+            System.out.println("22. Sair");
 
             int opcao = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
-                    loader.cadastrarPessoa(scanner);
+                    loader.cadastrarFuncionario(scanner);
                     break;
                 case 2:
-                    loader.cadastrarCargo(scanner);
+                    loader.editarFuncionario(scanner);
                     break;
                 case 3:
-                    loader.cadastrarTrilha(scanner);
+                    loader.listarFuncionarios();
                     break;
                 case 4:
+                    loader.excluirFuncionario(scanner);
+                    break;
+                case 5:
+                    loader.cadastrarGestor(scanner);
+                    break;
+                case 6:
+                    loader.editarGestor(scanner);
+                    break;
+                case 7:
+                    loader.listarGestores();
+                    break;
+                case 8:
+                    loader.excluirGestor(scanner);
+                    break;
+                case 9:
+                    loader.cadastrarCargo(scanner);
+                    break;
+                case 10:
+                    loader.editarCargo(scanner);
+                    break;
+                case 11:
+                    loader.listarCargos();
+                    break;
+                case 12:
+                    loader.excluirCargo(scanner);
+                    break;
+                case 13:
+                    loader.cadastrarTrilha(scanner);
+                    break;
+                case 14:
+                    loader.editarTrilha(scanner);
+                    break;
+                case 15:
+                    loader.listarTrilhas();
+                    break;
+                case 16:
+                    loader.excluirTrilha(scanner);
+                    break;
+                case 17:
+                    loader.cadastrarConhecimento(scanner);
+                    break;
+                case 18:
+                    loader.editarConhecimento(scanner);
+                    break;
+                case 19:
+                    loader.listarConhecimentos();
+                    break;
+                case 20:
+                    loader.excluirConhecimento(scanner);
+                    break;
+                case 22:
                     System.out.println("Saindo...");
                     scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
+                    continue;
+            }
+
+            System.out.println("Deseja realizar outra ação? (S/N)");
+            String continuar = scanner.nextLine().trim().toUpperCase();
+            if (!continuar.equals("S")) {
+                System.out.println("Encerrando o sistema...");
+                scanner.close();
+                System.exit(0);
             }
         }
     }
