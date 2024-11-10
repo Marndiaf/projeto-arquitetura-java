@@ -1,5 +1,6 @@
 package br.edu.infnet.mariana;
 
+import br.edu.infnet.mariana.domain.Avaliacao;
 import br.edu.infnet.mariana.domain.Cargo;
 import br.edu.infnet.mariana.domain.Gestor;
 import br.edu.infnet.mariana.domain.Funcionario;
@@ -10,10 +11,14 @@ import br.edu.infnet.mariana.service.FuncionarioService;
 import br.edu.infnet.mariana.service.GestorService;
 import br.edu.infnet.mariana.service.TrilhaService;
 import br.edu.infnet.mariana.service.ConhecimentoService;
+import br.edu.infnet.mariana.service.AvaliacaoService;
 
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +29,16 @@ public class Loader {
     private final CargoService cargoService;
     private final TrilhaService trilhaService;
     private final ConhecimentoService conhecimentoService;
+    private final AvaliacaoService avaliacaoService;
 
     public Loader(GestorService gestorService, FuncionarioService funcionarioService, CargoService cargoService,
-                  TrilhaService trilhaService, ConhecimentoService conhecimentoService) {
+                  TrilhaService trilhaService, ConhecimentoService conhecimentoService, AvaliacaoService avaliacaoService) {
         this.gestorService = gestorService;
         this.funcionarioService = funcionarioService;
         this.cargoService = cargoService;
         this.trilhaService = trilhaService;
         this.conhecimentoService = conhecimentoService;
+        this.avaliacaoService = avaliacaoService;
     }
     
     // Métodos para Funcionario
@@ -380,5 +387,78 @@ public class Loader {
         } else {
             System.out.println("Conhecimento não encontrado.");
         }
+    }
+    
+    //Métodos para Avaliação
+    
+    public void salvarAvaliacoesDeArquivo(String caminhoArquivo) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] dados = linha.split(",");
+
+                if (dados.length != 4) {
+                    System.out.println("Linha inválida no CSV: " + linha);
+                    continue;
+                }
+
+                int funcionarioId = Integer.parseInt(dados[0].trim());
+                int conhecimentoId = Integer.parseInt(dados[1].trim());
+                String tipo = dados[2].trim();
+                float nota = Float.parseFloat(dados[3].trim());
+                
+                Funcionario funcionario = funcionarioService.buscarFuncionarioPorId(funcionarioId);
+                Conhecimento conhecimento = conhecimentoService.buscarConhecimentoPorId(conhecimentoId);
+
+                if (funcionario == null) {
+                    System.out.println("Funcionário com ID " + funcionarioId + " não encontrado. Linha ignorada.");
+                    continue;
+                }
+
+                if (conhecimento == null) {
+                    System.out.println("Conhecimento com ID " + conhecimentoId + " não encontrado. Linha ignorada.");
+                    continue;
+                }
+
+                Avaliacao avaliacao = new Avaliacao(0, funcionario, conhecimento, tipo, nota);
+                avaliacaoService.salvarAvaliacao(avaliacao);
+                System.out.println("Avaliação salva: " + avaliacao);
+            }
+            System.out.println("Processamento de arquivo concluído.");
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Erro ao converter dados numéricos no arquivo: " + e.getMessage());
+        }
+    }
+    
+    public void exibirMediaConhecimentoFuncionario(int funcionarioId, int conhecimentoId) {
+        Funcionario funcionario = funcionarioService.buscarFuncionarioPorId(funcionarioId);
+        Conhecimento conhecimento = conhecimentoService.buscarConhecimentoPorId(conhecimentoId);
+
+        if (funcionario == null) {
+            System.out.println("Funcionário com ID " + funcionarioId + " não encontrado.");
+            return;
+        }
+
+        if (conhecimento == null) {
+            System.out.println("Conhecimento com ID " + conhecimentoId + " não encontrado.");
+            return;
+        }
+
+        List<Avaliacao> avaliacoes = avaliacaoService.buscarAvaliacoesPorFuncionarioEConhecimento(funcionario, conhecimento);
+
+        if (avaliacoes.isEmpty()) {
+            System.out.println("Nenhuma avaliação encontrada para o funcionário " + funcionarioId + " no conhecimento " + conhecimentoId);
+            return;
+        }
+
+        double soma = 0;
+        for (Avaliacao avaliacao : avaliacoes) {
+            soma += avaliacao.getNota();
+        }
+        double media = soma / avaliacoes.size();
+
+        System.out.printf("Média de conhecimento do funcionário %d no conhecimento %d: %.2f%n", funcionarioId, conhecimentoId, media);
     }
 }

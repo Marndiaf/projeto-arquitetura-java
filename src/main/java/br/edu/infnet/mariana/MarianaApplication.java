@@ -50,8 +50,9 @@ public class MarianaApplication implements CommandLineRunner {
             System.out.println("20. Excluir Conhecimento");
             System.out.println("--------------------------");
             System.out.println("21. Enviar Avaliação");
+            System.out.println("22. Exibir média de conhecimento de um funcionário");
             System.out.println("--------------------------");
-            System.out.println("22. Sair");
+            System.out.println("23. Sair");
 
             int opcao = scanner.nextInt();
             scanner.nextLine();
@@ -117,10 +118,22 @@ public class MarianaApplication implements CommandLineRunner {
                 case 20:
                     loader.excluirConhecimento(scanner);
                     break;
+                case 21:
+                    System.out.print("Informe o caminho do arquivo CSV de avaliações: ");
+                    String caminhoArquivo = scanner.nextLine();
+                    loader.salvarAvaliacoesDeArquivo(caminhoArquivo);
+                    break;
                 case 22:
-                    System.out.println("Saindo...");
-                    scanner.close();
-                    return;
+                    System.out.print("ID do funcionário: ");
+                    int funcionarioId = scanner.nextInt();
+                    System.out.print("ID do conhecimento: ");
+                    int conhecimentoId = scanner.nextInt();
+                    loader.exibirMediaConhecimentoFuncionario(funcionarioId, conhecimentoId);
+                    break;
+                case 23:
+                	System.out.println("Saindo...");
+                	scanner.close();
+                	return;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
                     continue;
