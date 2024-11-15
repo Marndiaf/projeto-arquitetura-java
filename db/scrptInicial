@@ -1,0 +1,50 @@
+-- Tabela Cargo
+CREATE TABLE Cargo (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome NVARCHAR(100) NOT NULL,
+    nivel NVARCHAR(50) NOT NULL
+);
+
+-- Tabela Gestor
+CREATE TABLE Gestor (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome NVARCHAR(100) NOT NULL
+);
+
+-- Tabela Funcionario
+CREATE TABLE Funcionario (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome NVARCHAR(100) NOT NULL,
+    cargo_id INT,
+    gestor_id INT,
+    FOREIGN KEY (cargo_id) REFERENCES Cargo(id),
+    FOREIGN KEY (gestor_id) REFERENCES Gestor(id)
+);
+
+-- Tabela Trilha
+CREATE TABLE Trilha (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome NVARCHAR(100) NOT NULL,
+    descricao NVARCHAR(255) NULL,
+    ativa BIT NOT NULL DEFAULT 1 -- Campo para indicar se a trilha está ativa
+);
+
+-- Tabela Conhecimento
+CREATE TABLE Conhecimento (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome NVARCHAR(100) NOT NULL,
+    nivel INT NOT NULL,
+    trilha_id INT,
+    FOREIGN KEY (trilha_id) REFERENCES Trilha(id)
+);
+
+-- Tabela Avaliacao
+CREATE TABLE Avaliacao (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    funcionario_id INT,
+    conhecimento_id INT,
+    tipo NVARCHAR(50) NOT NULL, -- "Autoavaliação" ou "Gestor"
+    nota FLOAT NOT NULL,
+    FOREIGN KEY (funcionario_id) REFERENCES Funcionario(id),
+    FOREIGN KEY (conhecimento_id) REFERENCES Conhecimento(id)
+);
